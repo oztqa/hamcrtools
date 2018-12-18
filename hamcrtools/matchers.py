@@ -5,7 +5,7 @@ import os
 from hamcrest import less_than_or_equal_to
 from hamcrest.core.base_matcher import BaseMatcher
 from hamcrest.core.string_description import StringDescription
-from jsonschema import validate
+from jsonschema import validate, ValidationError
 
 
 class JsonschemaMatcher(BaseMatcher):
