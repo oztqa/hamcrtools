@@ -2,6 +2,6 @@
 
 __version__ = '0.0.1'
 
-from hamcrtools.matchers import JsonschemaMatcher, matched_schema, is_sorted, ListSortedMatcher
+from hamcrtools.matchers import matched_schema, is_sorted
 
-__all__ = ["JsonschemaMatcher", "matched_schema", "is_sorted", "ListSortedMatcher"]
+__all__ = ["matched_schema", "is_sorted"]
