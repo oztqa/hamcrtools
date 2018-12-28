@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import json
 import os
 
@@ -23,10 +24,10 @@ class JsonschemaMatcher(BaseMatcher):
         return True
 
     def describe_to(self, description):
-        description.append_text(f"Content should correspond to schema located at {self.jsonschema_path}")
+        description.append_text(f'Content should correspond to schema located at {self.jsonschema_path}')
 
     def describe_mismatch(self, item, mismatch_description):
-        mismatch_description.append_text("Json is not correspond to schema.")
+        mismatch_description.append_text('Json is not correspond to schema.')
         mismatch_description.append_text(os.linesep)
         mismatch_description.append_text(self.message)
 
@@ -55,7 +56,7 @@ class ListSortedMatcher(BaseMatcher):
 
     def _matches(self, item):
         if not (isinstance(item, list) or isinstance(item, tuple)):
-            self.messages.append(f"Can't perform ListSorted matcher on {type(item)} object.")
+            self.messages.append(f'Can\'t perform ListSorted matcher on {type(item)} object.')
 
         pairs = [(item[i], item[i + 1]) for i in range(len(item) - 1)]
         for i, (left, right) in enumerate(pairs):
@@ -65,7 +66,7 @@ class ListSortedMatcher(BaseMatcher):
                 matcher.describe_to(description)
                 description.append_text(' expected, but ')
                 matcher.describe_mismatch(self.criteria(left), description)
-                description.append(f". items indexes are {i}, and {i + 1}")
+                description.append(f'. items indexes are {i}, and {i + 1}')
                 self.messages.append(str(description))
                 return False
         return True
@@ -74,9 +75,9 @@ class ListSortedMatcher(BaseMatcher):
         pass
 
     def describe_mismatch(self, item, mismatch_description):
-        mismatch_description.append_text("List is not correctly sorted.")
+        mismatch_description.append_text('List is not correctly sorted.')
         mismatch_description.append(os.linesep)
-        mismatch_description.append_text(f"Comparator = {self.pair_matcher} ; criteria = {self.criteria}.")
+        mismatch_description.append_text(f'Comparator = {self.pair_matcher} ; criteria = {self.criteria}.')
         mismatch_description.append_text(os.linesep)
         for m in self.messages:
             mismatch_description.append_text(m)
