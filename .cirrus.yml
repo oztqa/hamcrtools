@@ -9,7 +9,7 @@ pep8_task:
 
 do_release_task:
   timeout_in: 5m
-  only_if: $CIRRUS_BRANCH == 'master'
+  only_if: $CIRRUS_TAG != ''
   environment:
     PYPI_USER: ENCRYPTED[61e499c24dbabba70d8aa35f3724003486fc2ccfb63e1057dcdf97665a9919490c6edf6bfd3c3cfeb5342480b8ecdd7a]
     PYPI_PASSWORD: ENCRYPTED[87bab397e6a9d2e3366b866aea77a8b9d9121cec9a488a5ffb7b705355f90017a44214397f0982570a10cbc766b16889]
