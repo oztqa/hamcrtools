@@ -3,7 +3,7 @@
 from hamcrtools.matchers import matched_schema, is_sorted
 
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 
 __all__ = [
