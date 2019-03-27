@@ -3,10 +3,12 @@
 import json
 import os
 
+import requests
 from hamcrest import less_than_or_equal_to
 from hamcrest.core.base_matcher import BaseMatcher
 from hamcrest.core.string_description import StringDescription
 from jsonschema import validate, ValidationError
+from requests import Response
 
 
 class JsonschemaMatcher(BaseMatcher):
@@ -80,3 +82,32 @@ class ListSortedMatcher(BaseMatcher):
 
 def is_sorted(*args, **kwargs):
     return ListSortedMatcher(*args, **kwargs)
+
+
+class ResponseCodeMatcher(BaseMatcher):
+    def __init__(self, code):
+        self.expected_code = requests.codes[code] if isinstance(code, str) else code
+        if not isinstance(self.expected_code, int):
+            raise ValueError('Code is expected to be either string or integer or "requests.codes.{name}" object.')
+
+    def _matches(self, item):
+        self.actual_code = item
+        if isinstance(item, Response):
+            self.actual_code = item.status_code
+        if isinstance(item, str):
+            self.actual_code = requests.codes[item]
+        if not isinstance(self.actual_code, int):
+            raise ValueError('Item is expected to be either requests.Response object '
+                             'or string or integer or "requests.codes.{name}" object.')
+
+        return self.expected_code == self.actual_code
+
+    def describe_to(self, description):
+        description.append_text(f'Response code should be equal to {self.expected_code}.')
+
+    def describe_mismatch(self, item, mismatch_description):
+        mismatch_description.append_text(f'Response code was {self.actual_code}.')
+
+
+def has_code(code):
+    return ResponseCodeMatcher(code)

@@ -35,7 +35,8 @@ setup(
     platforms='any',
     install_requires=[
         'pyhamcrest',
-        'jsonschema'
+        'jsonschema',
+        'requests'
     ],
     classifiers=(
         'Development Status :: 4 - Beta',
