@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import json
 import os
+import json
 
 import requests
+from requests import Response
 from hamcrest import less_than_or_equal_to
 from hamcrest.core.base_matcher import BaseMatcher
 from hamcrest.core.string_description import StringDescription
 from jsonschema import validate, ValidationError
-from requests import Response
 
 
 class JsonschemaMatcher(BaseMatcher):
@@ -33,10 +33,6 @@ class JsonschemaMatcher(BaseMatcher):
         mismatch_description.append_text('Json is not correspond to schema.')
         mismatch_description.append_text(os.linesep)
         mismatch_description.append_text(self.message)
-
-
-def matched_schema(*args, **kwargs):
-    return JsonschemaMatcher(*args, **kwargs)
 
 
 class ListSortedMatcher(BaseMatcher):
@@ -80,18 +76,19 @@ class ListSortedMatcher(BaseMatcher):
             mismatch_description.append_text(os.linesep)
 
 
-def is_sorted(*args, **kwargs):
-    return ListSortedMatcher(*args, **kwargs)
-
-
 class ResponseCodeMatcher(BaseMatcher):
+
     def __init__(self, code):
         self.expected_code = requests.codes[code] if isinstance(code, str) else code
+
         if not isinstance(self.expected_code, int):
-            raise ValueError('Code is expected to be either string or integer or "requests.codes.{name}" object.')
+            raise ValueError(
+                'Code is expected to be either string or integer or "requests.codes.{name}" object.',
+            )
 
     def _matches(self, item):
         self.actual_code = item
+
         if isinstance(item, Response):
             self.actual_code = item.status_code
         if isinstance(item, str):
@@ -107,7 +104,3 @@ class ResponseCodeMatcher(BaseMatcher):
 
     def describe_mismatch(self, item, mismatch_description):
         mismatch_description.append_text(f'Response code was {self.actual_code}.')
-
-
-def has_code(code):
-    return ResponseCodeMatcher(code)
