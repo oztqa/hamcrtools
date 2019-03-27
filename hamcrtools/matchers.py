@@ -10,10 +10,11 @@ from jsonschema import validate, ValidationError
 
 
 class JsonschemaMatcher(BaseMatcher):
+
     def __init__(self, jsonschema_path):
         self.jsonschema_path = jsonschema_path
-        with open(jsonschema_path) as jsonschema_descriptor:
-            self.jsonschema = json.load(jsonschema_descriptor)
+        with open(jsonschema_path) as fp:
+            self.jsonschema = json.load(fp)
 
     def _matches(self, item):
         try:
@@ -32,24 +33,13 @@ class JsonschemaMatcher(BaseMatcher):
         mismatch_description.append_text(self.message)
 
 
-def matched_schema(jsonschema_path):
-    return JsonschemaMatcher(jsonschema_path)
-
-
-def object_itself(obj):
-    return obj
+def matched_schema(*args, **kwargs):
+    return JsonschemaMatcher(*args, **kwargs)
 
 
 class ListSortedMatcher(BaseMatcher):
-    @staticmethod
-    def _less_or_equal(left, right):
-        return left <= right
 
-    @staticmethod
-    def _greater_or_equal(left, right):
-        return left >= right
-
-    def __init__(self, pair_matcher=less_than_or_equal_to, criteria=object_itself):
+    def __init__(self, pair_matcher=less_than_or_equal_to, criteria=lambda o: o):
         self.pair_matcher = pair_matcher
         self.criteria = criteria
         self.messages = []
@@ -59,8 +49,10 @@ class ListSortedMatcher(BaseMatcher):
             self.messages.append(f'Can\'t perform ListSorted matcher on {type(item)} object.')
 
         pairs = [(item[i], item[i + 1]) for i in range(len(item) - 1)]
+
         for i, (left, right) in enumerate(pairs):
             matcher = self.pair_matcher(self.criteria(right))
+
             if not matcher.matches(self.criteria(left)):
                 description = StringDescription()
                 matcher.describe_to(description)
@@ -69,6 +61,7 @@ class ListSortedMatcher(BaseMatcher):
                 description.append(f'. items indexes are {i}, and {i + 1}')
                 self.messages.append(str(description))
                 return False
+
         return True
 
     def describe_to(self, description):
@@ -79,10 +72,11 @@ class ListSortedMatcher(BaseMatcher):
         mismatch_description.append(os.linesep)
         mismatch_description.append_text(f'Comparator = {self.pair_matcher} ; criteria = {self.criteria}.')
         mismatch_description.append_text(os.linesep)
+
         for m in self.messages:
             mismatch_description.append_text(m)
             mismatch_description.append_text(os.linesep)
 
 
-def is_sorted(pair_matcher=less_than_or_equal_to, criteria=object_itself):
-    return ListSortedMatcher(pair_matcher, criteria)
+def is_sorted(*args, **kwargs):
+    return ListSortedMatcher(*args, **kwargs)
