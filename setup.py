@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import re
 import os
 
 from setuptools import setup
@@ -15,17 +14,14 @@ README_FILE = os.path.join(
 )
 
 
-with open('hamcrtools/__init__.py') as fp:
-    __version__ = re.search(r"__version__\s*=\s*'(.*)'", fp.read(), re.M).group(1)
-
-
 with open(README_FILE) as fp:
     __description__ = fp.read()
 
 
 setup(
     name='hamcrtools',
-    version=__version__,
+    version_format='{tag}',
+    setup_requires=['setuptools-git-version'],
     url='https://github.com/oztqa/hamcrtools',
     packages=find_packages(include=('hamcrtools',)),
     description='Extension for hamcrest library',
@@ -36,7 +32,7 @@ setup(
     install_requires=[
         'pyhamcrest',
         'jsonschema',
-        'requests'
+        'requests',
     ],
     classifiers=(
         'Development Status :: 4 - Beta',
