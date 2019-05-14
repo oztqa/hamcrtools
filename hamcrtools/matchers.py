@@ -44,7 +44,7 @@ class ListSortedMatcher(BaseMatcher):
 
     def _matches(self, item):
         if not (isinstance(item, list) or isinstance(item, tuple)):
-            self.messages.append(f'Can\'t perform ListSorted matcher on {type(item)} object.')
+            self.messages.append(f'Cant perform ListSorted matcher on {type(item)} object.')
 
         pairs = [(item[i], item[i + 1]) for i in range(len(item) - 1)]
 
