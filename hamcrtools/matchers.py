@@ -19,6 +19,8 @@ class JsonschemaMatcher(BaseMatcher):
             self.jsonschema = json.load(fp)
 
     def _matches(self, item):
+        if isinstance(item, requests.Response):
+            item = item.json()
         try:
             validate(item, self.jsonschema)
         except ValidationError as e:
